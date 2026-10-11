@@ -2,6 +2,10 @@
  * Le Mystère du Bac 47 : enregistrement des résultats dans Google Sheets.
  * À coller dans Extensions > Apps Script du tableur, puis Déployer > Nouveau déploiement > Application Web.
  */
+// Identifiant du tableur (dans son adresse : /spreadsheets/d/IDENTIFIANT/edit).
+// Laisser vide si le script a été créé depuis le tableur (Extensions > Apps Script).
+var ID_TABLEUR = '';
+
 var ENTETES = ['Date', 'Nom', 'Titre', 'Agence', 'Score /120', 'Grade', 'Durée (min)',
   'Ch.1 Photo /35', 'Ch.2 Témoins /20', 'Ch.3 Chronologie /20', 'Ch.4 Causes /20', 'Ch.5 Réflexes /25'];
 
@@ -10,7 +14,9 @@ function doPost(e) {
   lock.waitLock(10000);
   try {
     var d = JSON.parse(e.postData.contents);
-    var feuille = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    var classeur = ID_TABLEUR ? SpreadsheetApp.openById(ID_TABLEUR) : SpreadsheetApp.getActiveSpreadsheet();
+    var feuille = classeur.getSheets()[0];
+    if (classeur.getSpreadsheetTimeZone() !== 'Europe/Paris') classeur.setSpreadsheetTimeZone('Europe/Paris');
     if (feuille.getLastRow() === 0) {
       feuille.appendRow(ENTETES);
       feuille.getRange(1, 1, 1, ENTETES.length).setFontWeight('bold');

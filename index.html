@@ -300,7 +300,7 @@ details ul{margin:8px 0 2px;padding-left:20px;display:flex;flex-direction:column
   /* ---------- État ---------- */
   var S;
   /* Adresse du script Google Sheets (Apps Script, « Application Web »). Vide = aucun envoi. */
-  var SHEET_URL = '';
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycby-9C_7NPSFFzMiftBMwl3wJ0TFxrp22slu_JnXgo8a6geeqGKN6q5JTjvsYBoTsEh_/exec';
   function reset(){ S = {name:'', agence:'', titre:'Inspecteur', pts:0, chap:0, pieces:[], found:[], score:{}, cp:[], t0:0, sent:false}; }
   reset();
   function fill(t){ var full = S.name ? S.titre + ' ' + S.name : S.titre; return t.split('{Insp}').join(full).split('{insp}').join(S.titre.toLowerCase()); }

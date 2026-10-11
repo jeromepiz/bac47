@@ -31,7 +31,9 @@ Mise en place, une seule fois :
 1. Créer un Google Sheets vide, puis ouvrir **Extensions > Apps Script**.
 2. Remplacer le contenu par celui de `google-sheets/Code.gs`, puis enregistrer.
 3. **Déployer > Nouveau déploiement**, type **Application Web** : exécuter en tant que « Moi », accès « Tout le monde ». Autoriser l'accès demandé par Google.
-4. Copier l'adresse de l'application Web (`https://script.google.com/macros/s/.../exec`) et la coller dans `index.html`, à la ligne `var SHEET_URL = '';`.
+4. Copier l'adresse de l'application Web (`https://script.google.com/macros/s/.../exec`) et la coller dans `index.html`, à la ligne `var SHEET_URL = '...'`.
+
+Si le script a été créé à part (et non depuis le tableur), renseigner l'identifiant du tableur dans `ID_TABLEUR`.
 
 Ces données servent au suivi de l'animation, pas à l'évaluation individuelle des salariés. Vider le tableau à la fin de la campagne.
 
