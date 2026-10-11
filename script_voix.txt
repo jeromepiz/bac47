@@ -1,0 +1,23 @@
+p_01	vigie	{Insp}, vous êtes réveillé ? Tant mieux. La tournée des Tilleuls, elle, a commencé très tôt. Un ripeur s'est coincé les doigts dans le lève-conteneur.
+p_02	vigie	Contusions, rien de cassé. Il a eu de la chance. Et la chance, ce n'est pas une mesure de prévention.
+p_03	vigie	Pipo ! Il me suit d'enquête en enquête, celui-là. Il ne parle pas, mais il voit tout.
+p_04	pinchon	C'est vous, la police ? J'ai tout pris en photo, moi ! À 5h41 pile. Je ne dors plus depuis 1987.
+p_05	vigie	Merci, monsieur. {Insp}, cette photo vaut tous les témoignages. Touchez tout ce qui cloche dessus. Il y a sept choses.
+c1_01	vigie	Sept sur sept. Avant même l'accident, cette impasse était déjà un piège.
+c1_02	nanard	Bon… dit comme ça, ça fait beaucoup.
+c2_01	vigie	Écoutons-les un par un. Notez bien ce qu'ils disent, on va vérifier.
+c2_02	dylan	Le bac est monté, la poignée a lâché, il est parti de travers. J'ai voulu le retenir. Réflexe. On m'avait jamais montré l'arrêt d'urgence, en vrai. Je suis là depuis deux mois.
+c2_03	nanard	Moi, j'étais sur le marchepied, je voyais rien de l'autre côté du bac. Quand le petit a crié, j'ai tapé l'arrêt d'urgence.
+c2_04	sylvie	Moi, je suis entrée dans l'impasse en marche avant, tranquille. Pas de marche arrière, rien.
+c2_05	pinchon	Mon bac ? Il était normal. Pas plus lourd que d'habitude. Quelques bricoles de la salle de bain, c'est tout.
+c2_06	vigie	Tout le monde est très sûr de soi. Voyons ce que disent les pièces.
+c2_07	sylvie	Bon… La camionnette du boulanger bloquait l'entrée. J'ai reculé, c'était plus simple. Nanard était derrière, sur le marchepied.
+c2_08	vigie	Sur le marchepied, en marche arrière, sans personne pour guider. Retenez bien ça, {insp}.
+c2_09	pinchon	Ah. Oui. J'ai refait la salle de bain. Mais j'ai mis un sac à côté pour le reste !
+c2_10	vigie	Le sac de gravats. Lui non plus n'a rien à faire dans une collecte d'ordures ménagères.
+c3_01	vigie	Remettons la matinée dans l'ordre. La feuille de route va nous aider.
+c4_01	vigie	Maintenant, les causes. Des faits, pas des coupables. Sélectionnez tout ce qui a contribué à la blessure de Dylan.
+c4_02	vigie	Six faits pour une seule blessure. Retirez-en un seul, et Dylan gardait ses doigts tranquilles. C'est pour ça qu'on agit sur chacun.
+c5_01	vigie	Dernière étape. Plus d'enquête : cette fois, c'est vous qui êtes dans la tournée. Que faites-vous ?
+f_01	vigie	Affaire classée, {Insp}. Dylan reprend lundi, avec des gants, un gilet et une vraie démonstration de l'arrêt d'urgence.
+f_02	pinchon	Et moi, j'ai loué une benne à gravats. Elle est garée devant chez le boulanger.
