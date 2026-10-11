@@ -22,6 +22,19 @@ L'écran de fin donne les règles à retenir et des questions de débrief pour l
 - `script_voix.txt` : texte de chaque réplique avec son identifiant
 - `prompts_gemini.md` : prompts utilisés pour les images
 
+## Suivi des résultats (Google Sheets)
+
+À la fin de chaque partie, le jeu envoie une ligne vers un Google Sheets : date, nom, titre, agence, score sur 120, grade, durée et score par chapitre. L'écran d'accueil prévient les joueurs que ces informations sont enregistrées.
+
+Mise en place, une seule fois :
+
+1. Créer un Google Sheets vide, puis ouvrir **Extensions > Apps Script**.
+2. Remplacer le contenu par celui de `google-sheets/Code.gs`, puis enregistrer.
+3. **Déployer > Nouveau déploiement**, type **Application Web** : exécuter en tant que « Moi », accès « Tout le monde ». Autoriser l'accès demandé par Google.
+4. Copier l'adresse de l'application Web (`https://script.google.com/macros/s/.../exec`) et la coller dans `index.html`, à la ligne `var SHEET_URL = '';`.
+
+Ces données servent au suivi de l'animation, pas à l'évaluation individuelle des salariés. Vider le tableau à la fin de la campagne.
+
 ## Crédits
 
 Illustrations générées avec Gemini. Voix générées avec [ElevenLabs](https://elevenlabs.io) (forfait gratuit : attribution obligatoire, usage non commercial). Portraits de la Commissaire Vigie et de Pipo repris de *L'Affaire de la Benne 3*.

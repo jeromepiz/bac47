@@ -299,7 +299,9 @@ details ul{margin:8px 0 2px;padding-left:20px;display:flex;flex-direction:column
 
   /* ---------- État ---------- */
   var S;
-  function reset(){ S = {name:'', titre:'Inspecteur', pts:0, chap:0, pieces:[], found:[], score:{}}; }
+  /* Adresse du script Google Sheets (Apps Script, « Application Web »). Vide = aucun envoi. */
+  var SHEET_URL = '';
+  function reset(){ S = {name:'', agence:'', titre:'Inspecteur', pts:0, chap:0, pieces:[], found:[], score:{}, cp:[], t0:0, sent:false}; }
   reset();
   function fill(t){ var full = S.name ? S.titre + ' ' + S.name : S.titre; return t.split('{Insp}').join(full).split('{insp}').join(S.titre.toLowerCase()); }
   function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -309,7 +311,7 @@ details ul{margin:8px 0 2px;padding-left:20px;display:flex;flex-direction:column
 
   var CHAPS = ['La photo','Les témoins','La chronologie','Les causes','Les bons réflexes'];
   function setChap(n){
-    S.chap = n;
+    S.chap = n; if (n) S.cp[n] = S.pts;
     $('chap-n').textContent = n ? 'Chapitre ' + n : 'Prologue';
     $('chap-t').textContent = n ? CHAPS[n-1] : 'Impasse des Tilleuls';
     var lis = $('rail').children;
@@ -377,12 +379,21 @@ details ul{margin:8px 0 2px;padding-left:20px;display:flex;flex-direction:column
     panel.innerHTML = '<div class="stack">'+
       '<p class="kicker">Collecte · Prévention · 15 minutes</p>'+
       '<p>Mardi, 5h40. Dans l\'impasse des Tilleuls, un ripeur se coince les doigts dans le lève-conteneur. Cinq chapitres pour comprendre ce qui s\'est passé, et pourquoi.</p>'+
-      '<label class="field" for="nom">Ton nom d\'enquêteur<input id="nom" type="text" maxlength="20" autocomplete="off" placeholder="Ex. Martin"></label>'+
+      '<label class="field" for="nom">Ton nom<input id="nom" type="text" maxlength="30" autocomplete="off" placeholder="Ex. Martin Dupont"></label>'+
+      '<label class="field" for="agence">Ton agence<input id="agence" type="text" maxlength="30" autocomplete="off" placeholder="Ex. Valence"></label>'+
       '<div class="seg" role="group" aria-label="Titre"><button type="button" id="t-m" aria-pressed="true">Inspecteur</button><button type="button" id="t-f" aria-pressed="false">Inspectrice</button></div>'+
+      '<p class="credits">Ton nom, ton agence et ton score sont enregistrés pour le suivi de l\'animation sécurité.</p>'+
       '<div class="row"><button class="btn" type="button" id="go">Ouvrir l\'enquête ▸</button></div></div>';
+    try { var ag = localStorage.getItem('b47-agence'); if (ag) $('agence').value = ag; } catch(e){}
     $('t-m').onclick = function(){ S.titre = 'Inspecteur'; this.setAttribute('aria-pressed','true'); $('t-f').setAttribute('aria-pressed','false'); };
     $('t-f').onclick = function(){ S.titre = 'Inspectrice'; this.setAttribute('aria-pressed','true'); $('t-m').setAttribute('aria-pressed','false'); };
-    $('go').onclick = function(){ actx(); S.name = $('nom').value.trim().slice(0,20); run(PROLOGUE, startHunt); };
+    $('go').onclick = function(){
+      var n = $('nom').value.trim().slice(0,30);
+      if (!n){ toast('Indique ton nom pour commencer.', true); $('nom').focus(); return; }
+      actx(); S.name = n; S.agence = $('agence').value.trim().slice(0,30); S.t0 = Date.now();
+      try { localStorage.setItem('b47-agence', S.agence); } catch(e){}
+      run(PROLOGUE, startHunt);
+    };
   }
 
   var PROLOGUE = [
@@ -663,11 +674,25 @@ details ul{margin:8px 0 2px;padding-left:20px;display:flex;flex-direction:column
     ], showEnd);
   }
   function rankFor(p){ return p >= 105 ? 'Commissaire de tournée' : p >= 80 ? 'Chef d\'équipe' : p >= 50 ? 'Ripeur confirmé' : 'Ripeur stagiaire'; }
+  function sendResult(){
+    if (S.sent) return; S.sent = true;
+    var ch = [], i;
+    for (i=1;i<=5;i++) ch.push((i<5 ? S.cp[i+1] : S.pts) - S.cp[i]);
+    var data = {nom:S.name, titre:S.titre, agence:S.agence, score:S.pts, grade:rankFor(S.pts),
+      duree_min:Math.round((Date.now()-S.t0)/600)/100, ch1:ch[0], ch2:ch[1], ch3:ch[2], ch4:ch[3], ch5:ch[4]};
+    var st = $('send-st'); if (!st) return;
+    if (!SHEET_URL){ st.textContent = 'Résultat non enregistré : le tableau de suivi n\'est pas encore configuré.'; return; }
+    try {
+      fetch(SHEET_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(data)})
+        .then(function(){ st.textContent = 'Résultat envoyé au tableau de suivi.'; })
+        .catch(function(){ st.textContent = 'Envoi impossible (pas de connexion ?). Le résultat n\'a pas été enregistré.'; });
+    } catch(e){ st.textContent = 'Envoi impossible. Le résultat n\'a pas été enregistré.'; }
+  }
   function showEnd(){
     var lis = $('rail').children; for (var i=0;i<5;i++) lis[i].className = 'done';
     $('chap-n').textContent = 'Affaire classée'; $('chap-t').textContent = 'Le bac 47';
     panel.innerHTML = '<div class="stack">'+
-      '<p class="kicker">'+esc(fill('{Insp}'))+' · '+S.pts+' points Vigilance sur 120</p>'+
+      '<p class="kicker">'+esc(fill('{Insp}'))+(S.agence ? ' · '+esc(S.agence) : '')+' · '+S.pts+' points Vigilance sur 120</p>'+
       '<p class="rank">'+rankFor(S.pts)+'</p>'+
       '<h2>Ce qu\'on retient</h2><ol class="rules">'+
       '<li>On ne touche jamais un bac pendant la levée. En cas de problème : arrêt d\'urgence, et on s\'écarte.</li>'+
@@ -681,9 +706,11 @@ details ul{margin:8px 0 2px;padding-left:20px;display:flex;flex-direction:column
       '<li>Que fait-on concrètement d\'un bac surchargé : étiquette, photo, remontée ?</li>'+
       '<li>Quand on est en retard, qui prévient qui ?</li>'+
       '<li>Un nouveau arrive lundi : qu\'est-ce qu\'on lui montre le premier jour ?</li></ul></details>'+
+      '<p class="credits" id="send-st">Envoi du résultat…</p>'+
       '<p class="credits">Illustrations générées avec Gemini · Voix générées avec ElevenLabs (elevenlabs.io) · Portraits de la Commissaire Vigie et de Pipo repris de L\'Affaire de la Benne 3.</p>'+
       '<div class="row"><button class="btn ghost" type="button" id="carn">Revoir le carnet</button><button class="btn next" type="button" id="again">Rejouer ▸</button></div></div>';
     $('carn').onclick = openCarnet; $('again').onclick = showTitle;
+    sendResult();
   }
 
   showTitle();
